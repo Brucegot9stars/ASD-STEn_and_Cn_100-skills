@@ -9,3 +9,6 @@ venv/
 
 # WorkBuddy 本地状态：安装副本由 install.py 重建，memory 是本地工作日志
 .workbuddy/
+
+# 打包产物（根目录；不影响两个 skill 仓库自带的 dist/）
+/dist/

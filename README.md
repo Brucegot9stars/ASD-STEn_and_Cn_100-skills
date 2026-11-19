@@ -47,7 +47,10 @@ After:  1. Disconnect the power supply.
 ├── README.md                          # 本文件
 ├── LICENSE                            # 脚本：MIT
 ├── LICENSE-docs                       # 文档：CC BY 4.0
-├── .github/workflows/ci.yml           # 统一 CI，分别检查两个 skill
+├── .github/workflows/
+│   ├── ci.yml                         # 分支与 PR 检查
+│   └── release.yml                    # v* 标签打包并发布 Release
+├── scripts/package.py                 # 打包脚本，本地可复现
 ├── asd-ste100-technical-writing/      # 英文版 skill（21 个文件）
 ├── ste-zh-technical-writing/          # 中文版 skill（21 个文件）
 └── books/asd-ste100/                  # 蒸馏审计与精华文档
@@ -112,6 +115,18 @@ python scripts/check_zh.py 文档.md --strict
 ```
 
 当前状态：两版单元测试各 8/8 通过。反例英文命中 12 条（7 条【必须】），中文命中 11 条（8 条【必须】）。正例均为 0 条。
+
+## 发布
+
+推送 `v*` 标签，例如 `v1.1.0`，会触发 `release.yml`。流程先跑两版检查，再打包，最后创建 GitHub Release 并上传附件。
+
+产物有三个：
+
+- `asd-ste100-technical-writing-<tag>.zip`
+- `ste-zh-technical-writing-<tag>.zip`
+- `ste-writing-skills-<tag>-source.zip`
+
+本地可复现：`python scripts/package.py --tag v1.1.0`。产物写到 `dist/`，该目录已被忽略。
 
 ## 许可
 
