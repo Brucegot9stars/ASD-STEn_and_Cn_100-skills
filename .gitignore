@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+.venv/
+venv/
+.idea/
+.vscode/
+
+# WorkBuddy 本地状态：安装副本由 install.py 重建，memory 是本地工作日志
+.workbuddy/

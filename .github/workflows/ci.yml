@@ -1,0 +1,44 @@
+name: check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  en:
+    name: ASD-STE100 English
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: asd-ste100-technical-writing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Clean example must pass strict check
+        run: python scripts/check_en.py --strict examples/after.md
+      - name: Bad example must be reported
+        run: python scripts/check_en.py examples/before.md
+
+  zh:
+    name: Controlled Technical Chinese
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ste-zh-technical-writing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Clean example must pass strict check
+        run: python scripts/check_zh.py --strict examples/after.md
+      - name: Rule docs must have no mandatory findings
+        run: python scripts/check_zh.py --strict SKILL.md references/writing-rules.md references/word-list.md references/checklist.md
+      - name: Bad example must be reported
+        run: python scripts/check_zh.py examples/before.md

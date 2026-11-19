@@ -1,0 +1,15 @@
+本仓库中除脚本以外的内容采用 CC BY 4.0 许可：
+
+- README.md、AGENTS.md、MANIFEST.md、CHANGELOG.md
+- references/ 下的全部规则、词表、清单、来源说明
+- examples/ 下的示例文本
+- dist/ste-zh.prompt.md
+- adapters/ 下的配置片段
+
+你可以复制、分发、修改、商用，条件是保留署名与许可说明。
+
+许可全文：https://creativecommons.org/licenses/by/4.0/legalcode
+
+脚本（scripts/check_zh.py、scripts/install.py、tests/）采用 MIT 许可，见 LICENSE。
+
+注意：ASD-STE100 是 ASD 的商标与版权作品。本仓库未复制其标准正文或词典，只借用公开描述的方法，并以中文重写规则。本项目与 ASD、STEMG 无隶属关系，其产出不构成 ASD-STE100 合规认证。
