@@ -1,0 +1,22 @@
+# 文档许可
+
+本项目中除脚本以外的内容采用 CC BY 4.0 许可：
+
+- 本主页 `README.md` 与 `.github/workflows/ci.yml`
+- `books/asd-ste100/` 下的蒸馏审计与精华文档
+- 两个 skill 仓库中的 `README.md`、`AGENTS.md`、`MANIFEST.md`、`CHANGELOG.md`
+- 两个 skill 仓库中的 `references/`、`docs/`、`examples/`、`dist/`、`adapters/`
+
+你可以复制、分发、修改、商用，条件是保留署名与许可说明。
+
+许可全文：<https://creativecommons.org/licenses/by/4.0/legalcode>
+
+## 代码许可
+
+脚本（`scripts/`、`tests/`）采用 MIT 许可，见根目录 `LICENSE` 与各 skill 仓库内的 `LICENSE`。
+
+## 商标与边界
+
+ASD-STE100 是 ASD 的商标与版权作品。本项目未复制标准正文或受控词典，只做执行摘要，完整条文以官方 Issue 9 PDF 为准。本项目与 ASD、STEMG 无隶属关系，其产出不构成 ASD-STE100 合规认证。
+
+中文 skill 是方法迁移，不是官方译本。ASD-STE100 只规范英文，不对中文文本作合规判定，中文产出不得声称符合该标准。
