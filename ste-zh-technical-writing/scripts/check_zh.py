@@ -9,11 +9,15 @@
         --max-op 30         操作句字数上限
         --max-desc 40       描述句字数上限
         --no-vocab          跳过词表检查
+        --no-lang-skip      不跳过纯英文行（默认跳过，便于双语文档分诊）
 
 只查句法层面：句长、禁用词、名词化、并联词、被动、句末条件、分号、
 端点歧义、相对日期、双重否定。查不出事实错误、术语是否选对、顺序是否合理、
 定语是否清楚、指代是否明确——这些必须人工判断。
 所有发现都要人工确认，脚本会有误报。
+
+脚本的【必须】/【建议】是机械判定级别，不等于规则文档的级别。
+规则判【必须】但脚本标【建议】的项仍要按规则处理。脚本只报可机械判定的句法项。
 """
 
 from __future__ import annotations
@@ -79,7 +83,7 @@ STEP_RE = re.compile(r"^(\s*)(?:(\d+(?:\.\d+)*)[.、)）]|\[[ xX]\]\s)")
 HEADING_RE = re.compile(r"^\s*#{1,6}\s")
 TABLE_RE = re.compile(r"^\s*\|")
 SKIP_PREFIX = ("不批准", "反例", "改写前", "✗", "❌")
-PUNCT_RE = re.compile(r"[\s，。；：、！？,.;:!?（）()\[\]「」『』“”‘’\"'《》〈〉—…·/\\|]")
+PUNCT_RE = re.compile(r"[\s，。；：、！？,.;:!?（）()\[\]「」『』“”‘’\"'《》〈〉—…·°℃/\\|]")
 
 
 def char_count(text: str) -> int:
@@ -184,7 +188,7 @@ def check_file(path: Path, args) -> list:
                 findings.append(Finding(lineno, "4.3", "必须", "条件在句尾：把条件写到动作前面"))
             # 开放列举
             if re.search(r"等\s*[。；，]?\s*$", body):
-                findings.append(Finding(lineno, "8.3", "建议", "开放列举「等」：列全或写「包括 A、B、C」"))
+                findings.append(Finding(lineno, "1.5", "必须", "开放列举「等」：列全或写「包括 A、B、C」"))
             if args.kind in (None, "操作"):
                 n = char_count(body)
                 if n > args.max_op:
@@ -203,7 +207,7 @@ def check_file(path: Path, args) -> list:
                                             f"描述句 {n} 字，不超过 {args.max_desc} 字"))
         if args.kind in (None, "描述"):
             if re.search(r"等\s*[。；]?\s*$", text):
-                findings.append(Finding(lineno, "8.3", "建议", "开放列举「等」：列全或写「包括 A、B、C」"))
+                findings.append(Finding(lineno, "1.5", "必须", "开放列举「等」：列全或写「包括 A、B、C」"))
             # 无序列表项各自成段，不合并计句数
             if re.match(r"^\s*[-*+]\s", line):
                 flush_para()
@@ -241,10 +245,12 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
 
     total, must, report = 0, 0, {}
+    valid = 0
     for f in args.files:
         if not f.is_file():
             print(f"跳过（不是文件）：{f}", file=sys.stderr)
             continue
+        valid += 1
         fs = check_file(f, args)
         fs.sort(key=lambda x: (x.line, x.rule))
         report[str(f)] = [x.as_dict() for x in fs]
@@ -253,6 +259,13 @@ def main(argv=None) -> int:
         if not args.json:
             for x in fs:
                 print(f"{f}:{x.line}: [{x.rule}][{x.level}] {x.msg}")
+
+    if valid == 0:
+        print("错误：没有可检查的有效文件。", file=sys.stderr)
+        if args.json:
+            print(json.dumps({"error": "no_valid_files", "total": 0,
+                              "must": 0, "files": {}}, ensure_ascii=False, indent=2))
+        return 2
 
     if args.json:
         print(json.dumps({"total": total, "must": must, "files": report},

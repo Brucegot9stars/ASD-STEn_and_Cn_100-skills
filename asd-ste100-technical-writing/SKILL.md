@@ -1,7 +1,7 @@
 ---
 name: asd-ste100-technical-writing
 description: |
-  Rewrite, write, or audit English technical documentation in ASD-STE100 Simplified Technical English (STE): procedures, descriptions, warnings, manuals, SOPs, runbooks. Trigger on ASD-STE100, STE, Simplified Technical English, controlled English, 简化技术英语, 受控英语, or requests for unambiguous safety-critical instructions. Not for marketing, legal, literary, or conversational text.
+  Rewrite, write, or audit English technical documentation in ASD-STE100 Simplified Technical English (STE): procedures, descriptions, warnings, manuals, SOPs, runbooks. Trigger on ASD-STE100, STE, Simplified Technical English, controlled English, 简化技术英语, 受控英语, simplify, plain English, make this easier to read, or requests for unambiguous safety-critical instructions. Not for marketing, legal, literary, or conversational text.
 metadata:
   standard: ASD-STE100 Issue 9 (January 2025)
   publisher: ASD / STEMG
@@ -12,7 +12,7 @@ metadata:
 
 ## 1. 用途
 
-把英文技术文档写成或改成符合 **ASD-STE100（Issue 9）** 的受控英语，让读者**一次读对、只有一种理解**。
+把英文技术文档写成或改成**按 ASD-STE100（Issue 9）写作规则改写的受控英语**，让读者**一次读对、只有一种理解**。
 
 STE 由两部分组成：
 
@@ -43,7 +43,7 @@ STE 由两部分组成：
 
 不合并两个 skill，也不做全篇双语改写。先按段落分诊，再分别处理：
 
-- `EN` 段用本 skill，`ZH` 段用 `ste-zh-technical-writing`，`CODE` 原样保留。
+- `EN` 段用本 skill，`ZH` 段用 `ste-zh-technical-writing`，`MIXED` 段按主导语言选一套，`CODE` 原样保留。
 - 同一句内中英混排时，按主导语言选**一套**句长上限，另一语言片段列为不可改字面量。
 - 建双语术语表，同一概念在两种语言里各定一个名字。安全提示级别必须对应：`WARNING` ↔ `警告`、`CAUTION` ↔ `注意`、`NOTE` ↔ `说明`。
 - 检查时两个脚本各跑一次（默认各自跳过对方语言主导的行）。任一脚本有【必须】级发现，整份文档不交付。
@@ -151,10 +151,14 @@ NOTE: The test takes about 5 minutes.
 
 ## 5. 执行流程
 
-1. **分类文本**
+1. **判定任务模式与文本类型**
+   - 模式：改写 / 仅检查 / 仅保留原文。用户未指定时默认改写。
+   - 仅检查：跳到第 5 步机械自检，只报发现，不改文本。
+   - 仅保留原文：法规、合同、认证原文不改，另出说明。
    - 判定：程序 / 描述 / 安全说明 / 混合。
    - 确认读者、监管要求、目标 Issue（默认 Issue 9）。
-   - 完成标准：能说出每段属于哪一类，句长上限已确定。
+   - 安全关键判据：航空、医疗、高压、带电作业场景视为安全关键。句长取程序 ≤ 20 词、描述 ≤ 25 词，安全说明逐条人工复核。
+   - 完成标准：模式与句长档位已定，能说出每段属于哪一类。
 
 2. **锁定不可改内容**
    - 代码、命令、路径、标识符、错误串、数字、单位、日期、版本、UI 标签、法规原文，逐字保留。
@@ -195,6 +199,7 @@ NOTE: The test takes about 5 minutes.
   1. 改写后的英文文本；
   2. 变更说明表：`Before | After | 触发的规则 | 理由`；
   3. 待确认清单：术语、技术事实、法规措辞。
+- 规则号口径：变更说明填 `references/writing-rules.md` 的节.条号（如 4.1）。M/J/S 号仅用于脚本报告，不写进变更说明。dist 单文件版规则用连续数字编号。
 - 中文用户：解释和变更说明用中文，交付文本用英文；不要输出逐字直译的中式英语。
 
 ## 7. 质量检查清单
@@ -241,6 +246,7 @@ NOTE: The test takes about 5 minutes.
 - **不修正错误的技术内容**：清晰但错误的指令仍然是错误指令。STE 与工程评审并行。
 - **短词不等于无歧义**：必须查词典的批准义，不能只换简单词。
 - **工具不能替代标准和人**：ASD/STEMG 不认证、不背书任何检查工具；工具会漏报和误报。
+- **脚本只查句法**：事实、术语、顺序需要人工判断。
 - **AI 生成文本可能"看起来合规"**：必须人工复核，不能把"像 STE"当成"是 STE"。
 - **不要全量铺开**：先试点、培训、建企业术语库，再推广；初期写作速度会下降。
 - **注意版本**：Issue 9（2025-01）已替代 Issue 8（2021-04）；合同或样式指南若仍写 Issue 8，需确认是否迁移。

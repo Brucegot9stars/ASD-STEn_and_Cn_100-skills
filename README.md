@@ -24,7 +24,7 @@ After:  1. Disconnect the power supply.
 | | `asd-ste100-technical-writing` | `ste-zh-technical-writing` |
 |---|---|---|
 | 用途 | 英文技术文档的写、改、审 | 中文技术文档的写、改、审 |
-| 依据 | ASD-STE100 Issue 9，53 条规则 / 9 节 | 方法迁移，9 节 44 条规则 |
+| 依据 | ASD-STE100 Issue 9，53 条规则 / 9 节 | 方法迁移，9 节 45 条规则 |
 | 句长 | 程序句 ≤ 20 词，描述句 ≤ 25 词 | 操作句 ≤ 30 字，描述句 ≤ 40 字 |
 | 词表 | 约 900 批准词、约 1200 不批准词 | 约 110 条中文词表 |
 | 检查器 | `scripts/check_en.py` | `scripts/check_zh.py` |
@@ -51,8 +51,8 @@ After:  1. Disconnect the power supply.
 │   ├── ci.yml                         # 分支与 PR 检查
 │   └── release.yml                    # v* 标签打包并发布 Release
 ├── scripts/package.py                 # 打包脚本，本地可复现
-├── asd-ste100-technical-writing/      # 英文版 skill（21 个文件）
-├── ste-zh-technical-writing/          # 中文版 skill（21 个文件）
+├── asd-ste100-technical-writing/      # 英文版 skill（22 个文件）
+├── ste-zh-technical-writing/          # 中文版 skill（22 个文件）
 └── books/asd-ste100/                  # 蒸馏审计与精华文档
 ```
 
@@ -63,7 +63,7 @@ After:  1. Disconnect the power supply.
 - `scripts/`：检查器与安装器。
 - `examples/`：反例与正例。
 - `dist/`、`adapters/`：各 agent 的适配文件。
-- `tests/`：单元测试。
+- `tests/`：单元测试（`test_check_*.py`、`test_install.py`）。
 
 逐文件说明见各自的 `MANIFEST.md`。
 
@@ -114,11 +114,13 @@ python scripts/check_zh.py 文档.md --strict
 (cd asd-ste100-technical-writing && python -m unittest discover -s tests)
 ```
 
-当前状态：两版单元测试各 8/8 通过。反例英文命中 12 条（7 条【必须】），中文命中 11 条（8 条【必须】）。正例均为 0 条。
+当前状态：两版单元测试各 14/14 通过。反例英文命中 12 条（7 条【必须】），中文命中 11 条（8 条【必须】）。正例均为 0 条。
 
 ## 发布
 
 推送 `v*` 标签，例如 `v1.1.0`，会触发 `release.yml`。流程先跑两版检查，再打包，最后创建 GitHub Release 并上传附件。
+
+两套 skill 各自独立版本。发布 tag 只标识发布批次，不代表各 skill 的内部版本号。
 
 产物有三个：
 

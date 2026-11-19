@@ -4,7 +4,7 @@
 
 方法借自 [ASD-STE100](https://www.asd-ste100.org/)（航空维修手册用的受控英语）。规则按中文的歧义来源重写。
 
-产物有三样：9 节 44 条规则、约 110 条受控词表、一个零依赖检查脚本。另有一套入口文件，可直接被 Claude Code、Codex、opencode、WorkBuddy、Hermes 调用。
+产物有三样：9 节 45 条规则、约 110 条受控词表、一个零依赖检查脚本。另有一套入口文件，可直接被 Claude Code、Codex、opencode、WorkBuddy、Hermes 调用。
 
 ```text
 原文：用户首先需要登陆到目标服务器，然后切换到 /opt 目录并且创建一个用于存放采集器配置文件以及运行时产生的临时数据的工作目录。
@@ -61,7 +61,7 @@ ste-zh-technical-writing/
 ├── LICENSE                  # 脚本：MIT
 ├── LICENSE-docs             # 规则、词表、README：CC BY 4.0
 ├── references/
-│   ├── writing-rules.md     # 9 节 44 条规则，每条带 ✗/✓ 与理由
+│   ├── writing-rules.md     # 9 节 45 条规则，每条带 ✗/✓ 与理由
 │   ├── word-list.md         # 约 110 条：异形词、名词化、空转词、模糊词、虚指、选词表、易混搭配、黑话、情态
 │   ├── checklist.md         # 19 项机械检查 + 判断检查 + 变更说明/交付模板
 │   └── sources.md           # 方法来源、阈值校准依据、与官方标准的关系
@@ -79,7 +79,8 @@ ste-zh-technical-writing/
 │   ├── codex-AGENTS.md      # 追加到 AGENTS.md 的片段
 │   └── opencode-command.md  # opencode 自定义命令
 └── tests/
-    └── test_check_zh.py     # 脚本单元测试
+    ├── test_check_zh.py     # 检查器单元测试
+    └── test_install.py      # 安装器单元测试
 ```
 
 CI 配置在工作区顶层的 `.github/workflows/ci.yml`。本目录可单独分发，不带 CI 文件。
@@ -113,6 +114,8 @@ python scripts/install.py --target dir --dest D:/skills # 任意目录
 ```
 
 可选参数：`--dry-run` 只打印将写入的路径，`--force` 覆盖已存在目录。
+
+`--target codex` 不需要 `--dest` 或 `--project`，直接在当前目录写 AGENTS.md 片段。
 
 `--project` 写入**执行命令时的当前目录**。要装到某个项目，先 `cd` 到该项目根目录，或用 `--dest` 给绝对路径。
 
@@ -233,7 +236,7 @@ $ echo $?
 
 ### 6.5 Hermes 或无 skill 机制的 agent
 
-把 `dist/ste-zh.prompt.md` 全文粘进系统提示，或写进项目说明文件。它是压缩版，含 30 条硬规则、核心替换表、输出格式与自检清单，不依赖外部文件。
+把 `dist/ste-zh.prompt.md` 全文粘进系统提示，或写进项目说明文件。它是压缩版，含 36 条硬规则、核心替换表、输出格式与自检清单，不依赖外部文件。
 
 ## 7. 规则速查（最高频的 10 条）
 
@@ -250,7 +253,7 @@ $ echo $?
 | 7.2 | 安全提示在步骤前、独立成段 | 步骤 5 括号里加"注意高温" → 警告段前置 |
 | 8.1 | 不用"以上/以下" | 20 N·m 以上 → 不小于 20 N·m |
 
-完整 44 条见 [`references/writing-rules.md`](references/writing-rules.md)。
+完整 45 条见 [`references/writing-rules.md`](references/writing-rules.md)。
 
 ## 8. 设计约束
 
@@ -260,6 +263,7 @@ $ echo $?
 - **不改变确定性**。`可能` 不得升级为 `必须`。
 - **不声称合规**。可以说"按受控中文规则改写"，不能说"符合 ASD-STE100"。
 - **脚本只查句法**。事实对不对、术语选得准不准、顺序合不合理，必须人工判断。
+- **脚本级别不等于规则级别**。脚本只报可机械判定的项。以规则文档的级别为准。
 
 ## 9. 阈值从哪来
 
@@ -279,7 +283,11 @@ python scripts/check_zh.py --strict SKILL.md references/*.md   # 文档自检
 - 加词条写清四项：词、意义、处理方式（禁用 / 选词 / 限定）、一个例句。
 - 版本变更记入 `CHANGELOG.md`。
 
-## 11. 许可
+## 11. 发布与版本
+
+两套 skill 各自独立版本。版本记录见各自的 CHANGELOG.md。发布 tag 只标识发布批次。tag 不代表各 skill 的内部版本号。同一 tag 下两个包的版本号可以不同。
+
+## 12. 许可
 
 - 规则、词表、README、示例文本：**CC BY 4.0**
 - 脚本：**MIT**

@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ("asd-ste100-technical-writing", "ste-zh-technical-writing")
 SKIP_DIRS = {"__pycache__", ".idea", ".vscode"}
-SKIP_SUFFIXES = (".pyc", ".pyo", ".pyd")
+SKIP_SUFFIXES = (".pyc", ".pyo", ".pyd", ".zip")
 
 
 def collect(base: Path, root_exclude: set[str]):
@@ -43,7 +44,8 @@ def main() -> None:
     parser.add_argument("--out", default="dist", help="输出目录，默认 dist")
     args = parser.parse_args()
 
-    tag = args.tag.strip() or "dev"
+    raw_tag = args.tag.strip() or "dev"
+    tag = re.sub(r"[\\/]", "-", raw_tag)
     out = ROOT / args.out
     products = []
 
@@ -53,7 +55,13 @@ def main() -> None:
 
     source_name = f"ste-writing-skills-{tag}"
     source = out / f"{source_name}-source.zip"
-    products.append(make_zip(source, ROOT, source_name, {".git", ".workbuddy", "dist"}))
+    try:
+        rel_out = out.relative_to(ROOT)
+    except ValueError:
+        rel_out = Path(".")
+    out_first = rel_out.parts[0] if rel_out.parts else "\x00"
+    root_exclude = {".git", ".workbuddy", "dist", out_first}
+    products.append(make_zip(source, ROOT, source_name, root_exclude))
 
     for product in products:
         size = product.stat().st_size

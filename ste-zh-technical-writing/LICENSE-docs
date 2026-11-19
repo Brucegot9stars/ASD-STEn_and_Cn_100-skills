@@ -12,4 +12,4 @@
 
 脚本（scripts/check_zh.py、scripts/install.py、tests/）采用 MIT 许可，见 LICENSE。
 
-注意：ASD-STE100 是 ASD 的商标与版权作品。本仓库未复制其标准正文或词典，只借用公开描述的方法，并以中文重写规则。本项目与 ASD、STEMG 无隶属关系，其产出不构成 ASD-STE100 合规认证。
+注意：ASD-STE100 是 ASD 的商标与版权作品。本仓库未复制其标准正文或词典，只借用公开描述的方法，并以中文重写规则。本项目与 ASD、STEMG 无隶属关系，其产出不构成 ASD-STE100 合规认证。ASD-STE100 只规范英文，不对中文文本作合规判定，中文产出不得声称符合该标准。

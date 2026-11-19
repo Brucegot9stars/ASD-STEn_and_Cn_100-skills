@@ -60,7 +60,9 @@ asd-ste100-technical-writing/
 ├── adapters/
 │   ├── codex-AGENTS.md         # 追加到 AGENTS.md 的片段
 │   └── opencode-command.md     # opencode 自定义命令
-└── tests/test_check_en.py      # 单元测试
+└── tests/
+    ├── test_check_en.py        # 检查器单元测试
+    └── test_install.py         # 安装器单元测试
 ```
 
 CI 配置在工作区顶层的 `.github/workflows/ci.yml`。本目录可单独分发，不带 CI 文件。
@@ -81,7 +83,7 @@ CI 配置在工作区顶层的 `.github/workflows/ci.yml`。本目录可单独�
 git clone <this-repo> asd-ste100-technical-writing
 cd asd-ste100-technical-writing
 python scripts/check_en.py --strict examples/after.md    # 应当 0 条
-python -m unittest discover -s tests                    # 8 个用例
+python -m unittest discover -s tests                    # 14 个用例
 ```
 
 ### 4.3 一键安装
@@ -96,6 +98,8 @@ python scripts/install.py --target dir --dest D:/skills
 ```
 
 可选参数：`--dry-run`、`--force`、`--dest`。`--project` 写入**执行命令时的当前目录**，请先 `cd` 到目标项目根目录。
+
+`--target codex` 不需要 `--dest` 或 `--project`，直接在当前目录写 AGENTS.md 片段。
 
 安装只复制运行所需文件：`SKILL.md`、`references/`、`examples/`、`scripts/check_en.py`。`tests/`、`adapters/`、`dist/`、`docs/` 不进入 skill 目录。
 
@@ -233,7 +237,11 @@ python scripts/check_en.py --strict examples/before.md   # 预期退出码 1
 
 改规则时按 `references/writing-rules.md` → `SKILL.md` 第 4 节 → `AGENTS.md` → `dist/ste-en.prompt.md` 顺序同步。`docs/mixed-language.md` 与中文版仓库同名文件保持一致。
 
-## 10. 许可
+## 10. 发布与版本
+
+两套 skill 各自独立版本。版本记录见各自的 CHANGELOG.md。发布 tag 只标识发布批次。tag 不代表各 skill 的内部版本号。同一 tag 下两个包的版本号可以不同。
+
+## 11. 许可
 
 - 规则、词表、README、示例文本：**CC BY 4.0**
 - 脚本：**MIT**

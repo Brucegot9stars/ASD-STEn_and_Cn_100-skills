@@ -6,7 +6,7 @@
     python scripts/install.py --target claude --project
     python scripts/install.py --target workbuddy
     python scripts/install.py --target workbuddy --project
-    python scripts/install.py --target codex
+    python scripts/install.py --target codex          # 当前目录写 AGENTS.md 片段
     python scripts/install.py --target dir --dest D:/skills
 
 参数:
@@ -15,6 +15,8 @@
     --dest PATH  目标目录（--target dir 必填，其他用于覆盖默认位置）
     --dry-run    只打印计划，不写文件
     --force      覆盖已存在的目标目录
+
+--target codex 固定写当前目录的 AGENTS.md 片段，不需要 --dest 或 --project。
 
 只安装运行所需文件：SKILL.md、references/、examples/、scripts/check_en.py。
 tests/、adapters/、dist/、docs/ 不进入技能目录。
@@ -44,6 +46,8 @@ PROJECT_DIRS = {
 
 
 def plan_target(args) -> Path:
+    if args.target == "codex":
+        return Path.cwd()
     if args.target == "dir":
         if not args.dest:
             sys.exit("--target dir 需要 --dest")

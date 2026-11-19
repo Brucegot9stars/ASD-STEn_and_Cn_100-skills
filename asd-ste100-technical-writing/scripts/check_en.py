@@ -173,7 +173,7 @@ def check_file(path: Path, args) -> list:
         for rule, level, pattern, msg, is_vocab in PATTERNS:
             if args.no_vocab and is_vocab:
                 continue
-            flags = re.I if rule in ("M8", "M14", "J8", "S7") else 0
+            flags = re.I if rule in ("M8", "M9", "M14", "J8", "S7") else 0
             if re.search(pattern, text, flags):
                 findings.append(Finding(lineno, rule, level, msg))
 
@@ -184,8 +184,6 @@ def check_file(path: Path, args) -> list:
         if step:
             body = text[step.end():]
             for rule, level, pattern, msg in STEP_CHECKS:
-                if rule == "M5" and args.no_vocab:
-                    continue
                 if re.search(pattern, body, re.I if rule == "M12" else 0):
                     findings.append(Finding(lineno, rule, level, msg))
             if args.kind in (None, "procedure"):
@@ -238,10 +236,12 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
 
     total, must, report = 0, 0, {}
+    valid = 0
     for f in args.files:
         if not f.is_file():
             print(f"跳过（不是文件）：{f}", file=sys.stderr)
             continue
+        valid += 1
         fs = check_file(f, args)
         fs.sort(key=lambda x: (x.line, x.rule))
         report[str(f)] = [x.as_dict() for x in fs]
@@ -250,6 +250,13 @@ def main(argv=None) -> int:
         if not args.json:
             for x in fs:
                 print(f"{f}:{x.line}: [{x.rule}][{x.level}] {x.msg}")
+
+    if valid == 0:
+        print("错误：没有可检查的有效文件。", file=sys.stderr)
+        if args.json:
+            print(json.dumps({"error": "no_valid_files", "total": 0,
+                              "must": 0, "files": {}}, ensure_ascii=False, indent=2))
+        return 2
 
     if args.json:
         print(json.dumps({"total": total, "must": must, "files": report},
